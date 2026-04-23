@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const API = axios.create({
-  baseURL: "http://localhost:3001",
+  baseURL: "https://medicin-donation.onrender.com",
 });
 
 API.interceptors.request.use((req) => {
