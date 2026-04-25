@@ -1,10 +1,11 @@
-import { useState } from "react";
+import { useState , useEffect} from "react";
 import API from "../../services/api";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 
 const DCreateProfile = () => {
   const navigate = useNavigate();
+  
 
   const [form, setForm] = useState({
     name: "",
@@ -33,18 +34,22 @@ const DCreateProfile = () => {
 
  
       const res = await API.post("/donor/save", form);
+      
 
       if (!res.data.success) {
         return toast.error(res.data.message);
       }
 
       toast.success("Profile Created");
+      
       navigate("/donor-dashboard");
 
     } catch (err) {
       toast.error(err.response?.data?.message);
     }
   };
+
+  
 
   return (
      <div className="flex items-center justify-center min-h-screen bg-gray-100 p-4">

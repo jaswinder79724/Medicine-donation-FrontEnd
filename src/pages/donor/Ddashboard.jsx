@@ -21,12 +21,7 @@ function Ddashboard() {
         {/* Cards */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
 
-          {/* Create Profile */}
-          <Card
-            title="Create Profile"
-            desc="Complete your donor profile"
-            onClick={() => navigate("/donor-profile-create")}
-          />
+          
 
           {/* My Profile */}
           <Card
@@ -35,12 +30,7 @@ function Ddashboard() {
             onClick={() => navigate("/donor-profile")}
           />
 
-          {/* Edit Profile */}
-          <Card
-            title="Edit Profile"
-            desc="Update your information"
-            onClick={() => navigate("/donor-edit")}
-          />
+         
 
           {/* Add Medicine */}
           <Card

@@ -10,7 +10,6 @@ import NProfile from "./pages/needy/NProfile";
 import NEditProfile from "./pages/needy/NEditProfile";
 import CreateMedicine from "./pages/medicine/CreateMedicine";
 import MyMedicines from "./pages/medicine/MyMedicines";
-import AllMedicines from "./pages/medicine/AllMedicines";
 import FilterMedicines from "./pages/medicine/FilterMedicines";
 import AdminUsers from "./pages/admin/AdminUsers";
 import Ndashboard from "./pages/needy/Ndashboard";
@@ -39,7 +38,6 @@ function App() {
 
         <Route path="/add-medicine" element={<CreateMedicine />} />
         <Route path="/my-medicines" element={<MyMedicines />} />
-        <Route path="/all-medicines" element={<AllMedicines />} />
         <Route path="/search-medicines" element={<FilterMedicines />} /> 
 
         <Route path="/admin-dashboard" element={<AdminUsers />} />

@@ -28,13 +28,7 @@ function Ndashboard() {
             onClick={() => navigate("/needy-profile")}
           />
 
-          {/* Edit Profile */}
-          <Card
-            title="Edit Profile"
-            desc="Update your details"
-            onClick={() => navigate("/needy-edit")}
-          />
-
+          
           {/* Search Medicines */}
           <Card
             title="Search Medicines"
@@ -42,19 +36,7 @@ function Ndashboard() {
             onClick={() => navigate("/search-medicines")}
           />
 
-          {/* All Medicines */}
-          <Card
-            title="Browse Medicines"
-            desc="View all available medicines"
-            onClick={() => navigate("/all-medicines")}
-          />
-
-          {/* Create Profile */}
-          <Card
-            title="Create Profile"
-            desc="Complete your needy profile"
-            onClick={() => navigate("/needy-profile-create")}
-          />
+        
 
         </div>
 
