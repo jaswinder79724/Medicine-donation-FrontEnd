@@ -89,6 +89,9 @@ const Login = () => {
         <p className="text-sm text-gray-500 text-center mt-4">
           Don't have an account? <span className="text-blue-500 cursor-pointer"><Link to="/signup">Sign up</Link></span>
         </p>
+          <p className="text-sm text-blue-500 text-center mt-4">
+                    <Link to="/forgot-password">Forgot password</Link>
+                  </p>
 
       </div>
 

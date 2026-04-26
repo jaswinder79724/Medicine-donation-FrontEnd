@@ -36,7 +36,12 @@ function Ndashboard() {
             onClick={() => navigate("/search-medicines")}
           />
 
-        
+          {/* change password */}
+          <Card
+            title="Settings"
+            desc="change youre password"
+            onClick={() => navigate("/update-password")}
+          />
 
         </div>
 

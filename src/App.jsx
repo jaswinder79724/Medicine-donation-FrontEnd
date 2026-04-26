@@ -15,6 +15,9 @@ import AdminUsers from "./pages/admin/AdminUsers";
 import Ndashboard from "./pages/needy/Ndashboard";
 import Ddashboard from "./pages/donor/Ddashboard";
 import UpdatePassword from "./pages/UpdatePassword";
+import VerifyEmail from "./pages/VerifyEmail";
+import ForgotPassword from "./pages/ForgotPassword";
+import ResetPassword from "./pages/ResetPassword";
 
 
 function App() {
@@ -26,7 +29,10 @@ function App() {
       <Routes>
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
-        <Route path="/up" element={<UpdatePassword/>} />
+        <Route path="/update-password" element={<UpdatePassword/>} />
+        <Route path="/verify/:token" element={<VerifyEmail/>} />
+        <Route path="/forgot-password" element={<ForgotPassword/>} />
+        <Route path="/reset-password/:token" element={<ResetPassword/>} />
 
         <Route path="/donor-dashboard" element={<Ddashboard/>} />  
         <Route path="/donor-profile-create" element={<DCreateProfile />} />
