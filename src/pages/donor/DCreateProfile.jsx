@@ -1,11 +1,10 @@
-import { useState , useEffect} from "react";
+import { useState } from "react";
 import API from "../../services/api";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 
 const DCreateProfile = () => {
   const navigate = useNavigate();
-  
 
   const [form, setForm] = useState({
     name: "",
@@ -18,151 +17,165 @@ const DCreateProfile = () => {
     note: "",
   });
 
-  const handleChange=(e)=>{
-    const{name,value}=e.target
-    setForm({...form,[name]:value})
-  }
+  const [image, setImage] = useState(null);
+  const [preview, setPreview] = useState(null);
 
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setForm({ ...form, [name]: value });
+  };
+
+  // ✅ image handler
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+    setImage(file);
+
+    if (file) {
+      setPreview(URL.createObjectURL(file));
+    }
+  };
+
+  // ✅ submit
   const handleSubmit = async (e) => {
     e.preventDefault();
+
     try {
-      // const formData = new FormData();
+      const formData = new FormData();
 
-      // for (let key in form) {
-      //   formData.append(key, form[key]);
-      // }
+      // add text fields
+      for (let key in form) {
+        formData.append(key, form[key]);
+      }
 
- 
-      const res = await API.post("/donor/save", form);
-      
+      // add image
+      if (image) {
+        formData.append("image", image);
+      }
+
+      const res = await API.post("/donor/save", formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
 
       if (!res.data.success) {
         return toast.error(res.data.message);
       }
 
-      toast.success("Profile Created");
-      
+      toast.success("Profile Created ✅");
       navigate("/donor-dashboard");
 
     } catch (err) {
-      toast.error(err.response?.data?.message);
+      toast.error(err.response?.data?.message || "Error");
     }
   };
 
-  
-
   return (
-     <div className="flex items-center justify-center min-h-screen bg-gray-100 p-4">
-
+    <div className="flex items-center justify-center min-h-screen bg-gray-100 p-4">
       <div className="bg-white p-8 rounded-2xl shadow-lg w-full max-w-2xl">
 
         <h2 className="text-2xl font-bold text-center mb-6 text-gray-800">
           Create Donor Profile ❤️
         </h2>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <form onSubmit={handleSubmit}>
 
-          <div>
-            <label className="text-sm text-gray-600">Name</label>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+
             <input
               value={form.name}
-              placeholder="Enter name"
-              className="  w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none"
+              placeholder="Name"
+              className="p-3 border rounded-lg"
               onChange={handleChange}
               name="name"
             />
-          </div>
 
-          <div>
-            <label className="text-sm text-gray-600">Gender</label>
             <input
               value={form.gender}
-              placeholder="Enter gender"
-              className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none"
-               onChange={handleChange}
-               name="gender"
+              placeholder="Gender"
+              className="p-3 border rounded-lg"
+              onChange={handleChange}
+              name="gender"
             />
-          </div>
 
-          <div>
-            <label className="text-sm text-gray-600">Mobile</label>
             <input
               value={form.mobile_no}
-              placeholder="Enter mobile number"
-              className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none"
-               onChange={handleChange}
-               name="mobile_no"
+              placeholder="Mobile"
+              className="p-3 border rounded-lg"
+              onChange={handleChange}
+              name="mobile_no"
             />
-          </div>
 
-          <div>
-            <label className="text-sm text-gray-600">State</label>
             <input
               value={form.state}
-              placeholder="Enter state"
-              className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none"
-               onChange={handleChange}
-               name="state"
+              placeholder="State"
+              className="p-3 border rounded-lg"
+              onChange={handleChange}
+              name="state"
             />
-          </div>
 
-          <div>
-            <label className="text-sm text-gray-600">City</label>
             <input
               value={form.city}
-              placeholder="Enter city"
-              className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none"
-               onChange={handleChange}
-               name="city"
+              placeholder="City"
+              className="p-3 border rounded-lg"
+              onChange={handleChange}
+              name="city"
             />
-          </div>
 
-          <div>
-            <label className="text-sm text-gray-600">Donation Type</label>
             <input
               value={form.donationType}
-              placeholder="Medicine / Money / Other"
-              className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none"
-               onChange={handleChange}
-               name="donationType"
+              placeholder="Donation Type"
+              className="p-3 border rounded-lg"
+              onChange={handleChange}
+              name="donationType"
+            />
+
+          </div>
+
+          <textarea
+            value={form.full_address}
+            placeholder="Full Address"
+            className="w-full p-3 border rounded-lg mt-4"
+            onChange={handleChange}
+            name="full_address"
+          />
+
+          <textarea
+            value={form.note}
+            placeholder="Note"
+            className="w-full p-3 border rounded-lg mt-4"
+            onChange={handleChange}
+            name="note"
+          />
+
+          {/* ✅ IMAGE INPUT */}
+          <div className="mt-4">
+            <label className="text-sm text-gray-600">Upload Photo</label>
+            <input
+              type="file"
+              className="w-full p-2 border rounded-lg"
+              onChange={handleImageChange}
             />
           </div>
 
-        </div>
+          {/* ✅ PREVIEW */}
+          {preview && (
+            <img
+              src={preview}
+              alt="preview"
+              className="w-24 h-24 mt-3 rounded-full object-cover"
+            />
+          )}
 
-        <div className="mt-4">
-          <label className="text-sm text-gray-600">Full Address</label>
-          <textarea
-            value={form.full_address}
-            placeholder="Enter full address"
-            className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none"
-             onChange={handleChange}
-             name="full_address"
-          />
-        </div>
+          <button
+            type="submit"
+            className="w-full mt-6 bg-blue-500 text-white p-3 rounded-lg hover:bg-blue-600"
+          >
+            Save Profile
+          </button>
 
-        <div className="mt-4">
-          <label className="text-sm text-gray-600">Note</label>
-          <textarea
-            value={form.note}
-            placeholder="Any additional note"
-            className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none"
-             onChange={handleChange}
-             name="note"
-          />
-        </div>
-
-        <button
-          onClick={handleSubmit}
-          className="w-full mt-6 bg-blue-500 text-white p-3 rounded-lg hover:bg-blue-600 transition font-semibold"
-          
-        >
-
-          Save Profile
-        </button>
-
+        </form>
       </div>
-
     </div>
   );
 };

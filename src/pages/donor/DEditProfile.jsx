@@ -5,13 +5,17 @@ import { useNavigate } from "react-router-dom";
 
 const DEditProfile = () => {
   const [form, setForm] = useState({});
+  const [image, setImage] = useState(null);
+  const [preview, setPreview] = useState(null);
   const [loading, setLoading] = useState(false);
+
   const navigate = useNavigate();
 
   const fetchData = async () => {
     try {
       const res = await API.get("/donor/get");
       setForm(res.data.data);
+      setPreview(res.data.data.image); // existing image
     } catch (err) {
       toast.error("Failed to load profile");
     }
@@ -21,17 +25,43 @@ const DEditProfile = () => {
     fetchData();
   }, []);
 
+  // image change
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+    setImage(file);
+
+    if (file) {
+      setPreview(URL.createObjectURL(file));
+    }
+  };
+
   const handleUpdate = async () => {
     try {
       setLoading(true);
 
-      const res = await API.put("/donor/edit", form);
+      const formData = new FormData();
+
+      // add fields
+      for (let key in form) {
+        formData.append(key, form[key]);
+      }
+
+      // add image if new selected
+      if (image) {
+        formData.append("image", image);
+      }
+
+      const res = await API.put("/donor/edit", formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
 
       if (!res.data.success) {
         return toast.error(res.data.message);
       }
 
-      toast.success("Profile Updated");
+      toast.success("Profile Updated ✅");
       navigate("/donor-profile");
 
     } catch (err) {
@@ -54,6 +84,19 @@ const DEditProfile = () => {
           <p className="text-sm text-gray-500">
             Update your personal and donation details
           </p>
+        </div>
+
+        {/* ✅ IMAGE */}
+        <div className="flex items-center gap-4 mb-8">
+          {preview && (
+            <img
+              src={preview}
+              alt="preview"
+              className="w-20 h-20 rounded-full object-cover border"
+            />
+          )}
+
+          <input type="file" onChange={handleImageChange} />
         </div>
 
         {/* BASIC INFO */}
@@ -84,8 +127,7 @@ const DEditProfile = () => {
             onChange={(e) =>
               setForm({ ...form, full_address: e.target.value })
             }
-            className="w-full border rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 outline-none"
-            placeholder="Enter full address"
+            className="w-full border rounded-lg px-3 py-2"
           />
         </div>
 
@@ -101,17 +143,14 @@ const DEditProfile = () => {
             onChange={(v) => setForm({ ...form, donationType: v })}
           />
 
-          <div className="mt-4">
-            <label className="text-xs text-gray-500 mb-1 block">Note</label>
-            <textarea
-              value={form.note || ""}
-              onChange={(e) =>
-                setForm({ ...form, note: e.target.value })
-              }
-              className="w-full border rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 outline-none"
-              placeholder="Add note"
-            />
-          </div>
+          <textarea
+            value={form.note || ""}
+            onChange={(e) =>
+              setForm({ ...form, note: e.target.value })
+            }
+            className="w-full border rounded-lg px-3 py-2 mt-4"
+            placeholder="Note"
+          />
         </div>
 
         {/* ACTION */}
@@ -119,7 +158,7 @@ const DEditProfile = () => {
 
           <button
             onClick={() => navigate("/donor-profile")}
-            className="px-5 py-2 border rounded-lg text-gray-600 hover:bg-gray-100 transition"
+            className="px-5 py-2 border rounded-lg"
           >
             Cancel
           </button>
@@ -127,7 +166,7 @@ const DEditProfile = () => {
           <button
             onClick={handleUpdate}
             disabled={loading}
-            className="px-5 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition disabled:opacity-50"
+            className="px-5 py-2 bg-blue-500 text-white rounded-lg disabled:opacity-50"
           >
             {loading ? "Updating..." : "Update"}
           </button>
@@ -140,15 +179,14 @@ const DEditProfile = () => {
   );
 };
 
-/* Reusable Input */
+/* Input */
 const Input = ({ label, value, onChange }) => (
   <div>
     <label className="text-xs text-gray-500 mb-1 block">{label}</label>
     <input
       value={value || ""}
       onChange={(e) => onChange(e.target.value)}
-      placeholder={`Enter ${label.toLowerCase()}`}
-      className="w-full border rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 outline-none"
+      className="w-full border rounded-lg px-3 py-2"
     />
   </div>
 );

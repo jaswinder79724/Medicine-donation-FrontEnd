@@ -8,6 +8,7 @@ const NProfile = () => {
   const fetchData = async () => {
     try {
       const res = await API.get("/needy/get");
+      console.log("DATA:", res.data.data); // ✅ debug
       setData(res.data.data);
     } catch (err) {
       console.error(err);
@@ -27,22 +28,63 @@ const NProfile = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 flex justify-center items-start py-10 px-4">
+    <div className="min-h-screen bg-gray-100 flex justify-center py-10 px-4">
+      <div className="w-full max-w-4xl bg-white rounded-2xl shadow-lg p-8">
 
-      <div className="w-full max-w-3xl bg-white border rounded-xl shadow-sm p-8">
-
-        {/* Header */}
+        {/* HEADER */}
         <div className="flex justify-between items-center mb-8">
-          <h2 className="text-xl font-semibold text-gray-800">
-            My Profile
-          </h2>
-
+          <h2 className="text-2xl font-bold">Needy Profile</h2>
           <Link
             to="/needy-edit"
-            className="text-sm bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition"
+            className="bg-blue-500 text-white px-4 py-2 rounded-lg"
           >
             Edit
           </Link>
+        </div>
+
+        {/* PROFILE TOP */}
+        <div className="flex items-center gap-6 mb-8">
+
+          {/* PROFILE IMAGE */}
+          <div>
+            {data.image ? (
+              <img
+                src={data.image}
+                className="w-28 h-28 rounded-full object-cover border"
+              />
+            ) : (
+              <div className="w-28 h-28 bg-gray-200 rounded-full flex items-center justify-center">
+                No Image
+              </div>
+            )}
+          </div>
+
+          {/* MAIN INFO */}
+          <div>
+            <h3 className="text-xl font-semibold">{data.name}</h3>
+            <p className="text-gray-500">{data.disease}</p>
+            <p className="text-sm text-gray-400">
+              {data.city}, {data.state}
+            </p>
+          </div>
+
+        </div>
+
+        {/* 🔥 DISEASE PROOF FIXED */}
+        <div className="mb-8">
+          <h3 className="text-sm text-gray-500 mb-2">Disease Proof</h3>
+
+          {data.diseaseProofImage ? (
+            <img
+              src={data.diseaseProofImage}
+              alt="proof"
+              className="w-40 h-40 object-cover border rounded-lg"
+            />
+          ) : (
+            <div className="w-40 h-40 bg-gray-200 flex items-center justify-center rounded">
+              No Proof Uploaded
+            </div>
+          )}
         </div>
 
         {/* BASIC INFO */}
@@ -55,46 +97,32 @@ const NProfile = () => {
         </Section>
 
         {/* ADDRESS */}
-        <div className="mb-8">
-          <h3 className="text-sm font-medium text-gray-500 mb-4 uppercase">
-            Address
-          </h3>
+        <Section title="Address">
+          <Box value={data.full_address} />
+        </Section>
 
-          <div className="bg-gray-50 border rounded-lg p-4 text-gray-800">
-            {data.full_address || "—"}
-          </div>
-        </div>
-
-        {/* MEDICAL INFO */}
+        {/* MEDICAL */}
         <Section title="Medical Information">
           <Field label="Disease" value={data.disease} />
           <Field label="Medicine Needed" value={data.medicine} />
         </Section>
 
         {/* NOTE */}
-        <div>
-          <h3 className="text-sm font-medium text-gray-500 mb-4 uppercase">
-            Note
-          </h3>
-
-          <div className="bg-gray-50 border rounded-lg p-4 text-gray-800">
-            {data.note || "—"}
-          </div>
-        </div>
+        <Section title="Additional Note">
+          <Box value={data.note} />
+        </Section>
 
       </div>
     </div>
   );
 };
 
-/* Reusable Components */
+/* COMPONENTS */
 
 const Section = ({ title, children }) => (
-  <div className="mb-8">
-    <h3 className="text-sm font-medium text-gray-500 mb-4 uppercase">
-      {title}
-    </h3>
-    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+  <div className="mb-6">
+    <h3 className="text-sm text-gray-500 mb-3 uppercase">{title}</h3>
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
       {children}
     </div>
   </div>
@@ -103,7 +131,13 @@ const Section = ({ title, children }) => (
 const Field = ({ label, value }) => (
   <div>
     <p className="text-xs text-gray-400">{label}</p>
-    <p className="text-gray-800">{value || "—"}</p>
+    <p className="text-gray-800 font-medium">{value || "—"}</p>
+  </div>
+);
+
+const Box = ({ value }) => (
+  <div className="bg-gray-50 border p-3 rounded col-span-2">
+    {value || "—"}
   </div>
 );
 

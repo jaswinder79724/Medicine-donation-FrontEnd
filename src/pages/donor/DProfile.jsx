@@ -6,19 +6,22 @@ const DProfile = () => {
   const [data, setData] = useState(null);
 
   const fetchData = async () => {
-    const res = await API.get("/donor/get");
-    setData(res.data.data);
+    try {
+      const res = await API.get("/donor/get");
+      setData(res.data.data);
+    } catch (err) {
+      console.log(err);
+    }
   };
 
   useEffect(() => {
     fetchData();
   }, []);
 
-  if (!data) return <p>Loading...</p>;
+  if (!data) return <p className="text-center mt-10">Loading...</p>;
 
   return (
-         <div className="min-h-screen bg-gray-50 flex justify-center items-start py-10 px-4">
-
+    <div className="min-h-screen bg-gray-50 flex justify-center items-start py-10 px-4">
       <div className="w-full max-w-3xl bg-white rounded-xl shadow-sm border p-8">
 
         {/* Header */}
@@ -35,7 +38,31 @@ const DProfile = () => {
           </Link>
         </div>
 
-        {/* Section: Basic Info */}
+        {/* ✅ PROFILE IMAGE */}
+        <div className="flex items-center gap-4 mb-8">
+          {data.image ? (
+            <img
+              src={data.image}
+              alt="profile"
+              className="w-20 h-20 rounded-full object-cover border"
+            />
+          ) : (
+            <div className="w-20 h-20 rounded-full bg-gray-200 flex items-center justify-center text-gray-500">
+              No Image
+            </div>
+          )}
+
+          <div>
+            <p className="text-lg font-semibold text-gray-800">
+              {data.name}
+            </p>
+            <p className="text-sm text-gray-500">
+              {data.donationType}
+            </p>
+          </div>
+        </div>
+
+        {/* Basic Info */}
         <div className="mb-8">
           <h3 className="text-sm font-medium text-gray-500 mb-4 uppercase tracking-wide">
             Basic Information
@@ -71,7 +98,7 @@ const DProfile = () => {
           </div>
         </div>
 
-        {/* Section: Address */}
+        {/* Address */}
         <div className="mb-8">
           <h3 className="text-sm font-medium text-gray-500 mb-4 uppercase tracking-wide">
             Address
@@ -82,7 +109,7 @@ const DProfile = () => {
           </div>
         </div>
 
-        {/* Section: Donation */}
+        {/* Donation */}
         <div>
           <h3 className="text-sm font-medium text-gray-500 mb-4 uppercase tracking-wide">
             Donation Details
@@ -106,8 +133,7 @@ const DProfile = () => {
         </div>
 
       </div>
-
-    </div>    
+    </div>
   );
 };
 
