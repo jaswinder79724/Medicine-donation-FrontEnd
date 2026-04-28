@@ -63,6 +63,18 @@ const DCreateProfile = () => {
       }
 
       toast.success("Profile Created ✅");
+      const user = JSON.parse(localStorage.getItem("user"));
+
+localStorage.setItem(
+  "user",
+  JSON.stringify({
+    ...user,
+    isProfileComplete: true
+  })
+);
+
+// 🔥 trigger navbar update
+window.dispatchEvent(new Event("storage"));
       navigate("/donor-dashboard");
 
     } catch (err) {

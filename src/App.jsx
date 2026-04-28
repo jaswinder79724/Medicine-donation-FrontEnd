@@ -28,6 +28,7 @@ import ResetPassword from "./pages/ResetPassword";
 import PrivateRoute from "./components/PrivateRoute";
 import Unauthorized from "./pages/Unauthorized";
 import PublicRoute from "./components/PublicRoute";
+import NotFound from "./pages/NotFound";
 
 
 function App() {
@@ -60,6 +61,7 @@ function App() {
         <Route path="/forgot-password" element={<ForgotPassword />} />
         <Route path="/reset-password/:token" element={<ResetPassword />} />
         <Route path="/unauthorized" element={<Unauthorized />} />
+        <Route path="*" element={<NotFound/> } />
 
 
         {/* DONOR */}
@@ -72,14 +74,9 @@ function App() {
           }
         />
 
-        <Route
-          path="/donor-profile-create"
-          element={
-            <PrivateRoute role="donor">
-              <DCreateProfile />
-            </PrivateRoute>
-          }
-        />
+        
+        {/* ✅ PROFILE CREATE (IMPORTANT: NOT PROTECTED) */}
+        <Route path="/donor-profile-create" element={<DCreateProfile />} />
 
         <Route
           path="/donor-profile"
@@ -109,14 +106,8 @@ function App() {
           }
         />
 
-        <Route
-          path="/needy-profile-create"
-          element={
-            <PrivateRoute role="needy">
-              <NCreateProfile />
-            </PrivateRoute>
-          }
-        />
+             <Route path="/needy-profile-create" element={<NCreateProfile />} />
+
 
         <Route
           path="/needy-profile"

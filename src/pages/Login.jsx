@@ -30,6 +30,7 @@ const Login = () => {
         JSON.stringify({
           email: res.data.email,
           role: res.data.role,
+          isProfileComplete: res.data.isProfileComplete
         })
       );
 
