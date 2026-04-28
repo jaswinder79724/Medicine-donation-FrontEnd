@@ -72,7 +72,7 @@ const Navbar = () => {
                 <Home size={18} /> Dashboard
               </button>
 
-              {/* DONOR LINKS
+              {/* DONOR LINKS */}
               {user.role === "donor" && user.isProfileComplete && (
                 <>
                   <Link className="hover:text-blue-500" to="/add-medicine">
@@ -82,14 +82,14 @@ const Navbar = () => {
                     My Medicines
                   </Link>
                 </>
-              )} */}
+              )} 
 
               {/* NEEDY */}
-              {/* {user.role === "needy" && user.isProfileComplete && (
+              {user.role === "needy" && user.isProfileComplete && (
                 <Link className="hover:text-blue-500" to="/search-medicines">
                   Search
                 </Link>
-              )} */}
+              )}
 
               {/* LOGOUT */}
               <button
@@ -132,7 +132,7 @@ const Navbar = () => {
               <button onClick={handleDashboardClick} className="flex items-center gap-2">
                 <Home size={18} /> Dashboard
               </button>
-
+{/* 
               {user.role === "donor" && user.isProfileComplete && (
                 <>
                   <Link onClick={() => setMenuOpen(false)} to="/add-medicine">
@@ -142,13 +142,13 @@ const Navbar = () => {
                     My Medicines
                   </Link>
                 </>
-              )}
+              )} 
 
               {user.role === "needy" && user.isProfileComplete && (
                 <Link onClick={() => setMenuOpen(false)} to="/search-medicines">
                   Search Medicines
                 </Link>
-              )}
+              )}*/}
 
               <button
                 onClick={handleLogout}
