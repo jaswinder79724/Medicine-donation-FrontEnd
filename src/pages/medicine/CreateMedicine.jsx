@@ -14,16 +14,36 @@ const CreateMedicine = () => {
     city: "",
   });
 
+  const [image, setImage] = useState(null); // ✅ new state
+
   const handleSubmit = async () => {
     try {
-      // Basic validation
       if (!form.name || !form.quantity || !form.expiryDate) {
         return toast.error("Please fill required fields");
       }
 
       setLoading(true);
 
-      const res = await API.post("/medicine/create", form);
+      // ✅ FormData create
+      const formData = new FormData();
+
+      formData.append("name", form.name);
+      formData.append("quantity", form.quantity);
+      formData.append("expiryDate", form.expiryDate);
+      formData.append("description", form.description);
+      formData.append("state", form.state);
+      formData.append("city", form.city);
+
+      // ✅ image append
+      if (image) {
+        formData.append("image", image);
+      }
+
+      const res = await API.post("/medicine/create", formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
 
       if (!res.data.success) {
         return toast.error(res.data.message);
@@ -31,7 +51,7 @@ const CreateMedicine = () => {
 
       toast.success("Medicine Added");
 
-      // reset form
+      // reset
       setForm({
         name: "",
         quantity: "",
@@ -40,6 +60,8 @@ const CreateMedicine = () => {
         state: "",
         city: "",
       });
+
+      setImage(null);
 
     } catch (err) {
       toast.error(err.response?.data?.message || "Something went wrong");
@@ -87,6 +109,19 @@ const CreateMedicine = () => {
 
         </div>
 
+        {/* ✅ IMAGE UPLOAD */}
+        <div className="mt-6">
+          <label className="text-xs text-gray-500 mb-1 block">
+            Upload Image
+          </label>
+          <input
+            type="file"
+            accept="image/*"
+            onChange={(e) => setImage(e.target.files[0])}
+            className="w-full border rounded-lg px-3 py-2"
+          />
+        </div>
+
         {/* Description */}
         <div className="mt-6">
           <label className="text-xs text-gray-500 mb-1 block">
@@ -104,7 +139,6 @@ const CreateMedicine = () => {
 
         {/* ACTION */}
         <div className="flex justify-end mt-6">
-
           <button
             onClick={handleSubmit}
             disabled={loading}
@@ -112,7 +146,6 @@ const CreateMedicine = () => {
           >
             {loading ? "Submitting..." : "Submit"}
           </button>
-
         </div>
 
       </div>

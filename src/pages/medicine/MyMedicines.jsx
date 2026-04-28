@@ -48,7 +48,7 @@ const MyMedicines = () => {
   return (
     <div className="min-h-screen bg-gray-50 p-6">
 
-      <div className="max-w-5xl mx-auto">
+      <div className="max-w-6xl mx-auto">
 
         {/* Header */}
         <div className="mb-6">
@@ -60,7 +60,7 @@ const MyMedicines = () => {
           </p>
         </div>
 
-        {/* Empty State */}
+        {/* Empty */}
         {data.length === 0 ? (
           <p className="text-center text-gray-500 py-10">
             No medicines added yet
@@ -69,66 +69,81 @@ const MyMedicines = () => {
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
 
-           {data.map((m) => {
-  const isExpired =
-    m.expiryDate && new Date(m.expiryDate) < new Date();
+            {data.map((m) => {
+              const isExpired =
+                m.expiryDate && new Date(m.expiryDate) < new Date();
 
-  return (
-    <div
-      key={m._id}
-      className="bg-white border rounded-xl p-5 shadow-sm hover:shadow transition flex flex-col justify-between"
-    >
+              return (
+                <div
+                  key={m._id}
+                  className="bg-white border rounded-xl shadow-sm overflow-hidden flex flex-col justify-between"
+                >
 
-      {/* Top */}
-      <div>
+                  {/* ✅ IMAGE */}
+                  {m.image ? (
+                    <img
+                      src={m.image}
+                      alt={m.name}
+                      className="w-full h-40 object-cover"
+                    />
+                  ) : (
+                    <div className="w-full h-40 bg-gray-200 flex items-center justify-center text-gray-500">
+                      No Image
+                    </div>
+                  )}
 
-        <h3 className="font-semibold text-gray-800 mb-3 text-lg">
-          {m.name}
-        </h3>
+                  {/* CONTENT */}
+                  <div className="p-4 flex flex-col flex-grow">
 
-        <div className="space-y-2 text-sm">
+                    <h3 className="font-semibold text-gray-800 mb-3 text-lg">
+                      {m.name}
+                    </h3>
 
-          <p className="text-gray-600">
-            📦 <span className="text-gray-400">Quantity:</span>{" "}
-            {m.quantity || "—"}
-          </p>
+                    <div className="space-y-2 text-sm flex-grow">
 
-          <p
-            className={`${
-              isExpired ? "text-red-500" : "text-gray-600"
-            }`}
-          >
-            📅 <span className="text-gray-400">Expiry:</span>{" "}
-            {m.expiryDate
-              ? new Date(m.expiryDate).toLocaleDateString()
-              : "—"}
-          </p>
+                      <p className="text-gray-600">
+                        📦 <span className="text-gray-400">Quantity:</span>{" "}
+                        {m.quantity || "—"}
+                      </p>
 
-          <p className="text-gray-600">
-            📍 <span className="text-gray-400">Location:</span>{" "}
-            {m.city || m.location?.city || "—"},{" "}
-            {m.state || "—"}
-          </p>
+                      <p
+                        className={`${
+                          isExpired ? "text-red-500" : "text-gray-600"
+                        }`}
+                      >
+                        📅 <span className="text-gray-400">Expiry:</span>{" "}
+                        {m.expiryDate
+                          ? new Date(m.expiryDate).toLocaleDateString()
+                          : "—"}
+                      </p>
 
-          <p className="text-gray-600">
-            📝 <span className="text-gray-400">Description:</span>{" "}
-            {m.description || "—"}
-          </p>
+                      <p className="text-gray-600">
+                        📍 <span className="text-gray-400">Location:</span>{" "}
+                        {m.location?.city || "—"},{" "}
+                        {m.location?.state || "—"}
+                      </p>
 
-        </div>
-      </div>
+                      <p className="text-gray-600">
+                        📝 <span className="text-gray-400">Description:</span>{" "}
+                        {m.description || "—"}
+                      </p>
 
-      {/* Bottom Action */}
-      <button
-        onClick={() => handleDelete(m._id)}
-        className="w-full mt-4 bg-red-500 text-white py-2 rounded-lg text-sm hover:bg-red-600 transition"
-      >
-        Delete
-      </button>
+                    </div>
 
-    </div>
-  );
-})}
+                    {/* DELETE BUTTON */}
+                    <button
+                      onClick={() => handleDelete(m._id)}
+                      className="w-full mt-4 bg-red-500 text-white py-2 rounded-lg text-sm hover:bg-red-600 transition"
+                    >
+                      Delete
+                    </button>
+
+                  </div>
+
+                </div>
+              );
+            })}
+
           </div>
         )}
 

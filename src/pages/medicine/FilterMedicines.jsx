@@ -9,7 +9,6 @@ const FilterMedicines = () => {
   const [selectedDonor, setSelectedDonor] = useState(null);
   const [searched, setSearched] = useState(false);
 
-  // ✅ PAGINATION STATE
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 6;
 
@@ -19,7 +18,7 @@ const FilterMedicines = () => {
       setLoading(true);
       const res = await API.get("/medicine/all");
       setData(res.data.data);
-      setCurrentPage(1); // reset page
+      setCurrentPage(1);
     } catch (err) {
       toast.error("Failed to load medicines");
     } finally {
@@ -42,7 +41,7 @@ const FilterMedicines = () => {
       );
 
       setData(res.data.data);
-      setCurrentPage(1); // reset page
+      setCurrentPage(1);
 
     } catch (err) {
       toast.error("Search failed");
@@ -58,7 +57,7 @@ const FilterMedicines = () => {
     fetchAllMedicines();
   };
 
-  // ✅ PAGINATION LOGIC
+  // ✅ PAGINATION
   const indexOfLast = currentPage * itemsPerPage;
   const indexOfFirst = indexOfLast - itemsPerPage;
   const currentData = data.slice(indexOfFirst, indexOfLast);
@@ -66,9 +65,9 @@ const FilterMedicines = () => {
 
   return (
     <div className="min-h-screen bg-gray-50 p-6">
-      <div className="max-w-5xl mx-auto">
+      <div className="max-w-6xl mx-auto">
 
-        {/* Header */}
+        {/* HEADER */}
         <div className="mb-6">
           <h2 className="text-xl font-semibold text-gray-800">
             Search Medicines
@@ -78,7 +77,7 @@ const FilterMedicines = () => {
           </p>
         </div>
 
-        {/* Search */}
+        {/* SEARCH BOX */}
         <div className="bg-white border rounded-xl p-5 shadow-sm mb-6 grid grid-cols-1 md:grid-cols-4 gap-4">
 
           <input
@@ -116,7 +115,7 @@ const FilterMedicines = () => {
 
         </div>
 
-        {/* Results */}
+        {/* RESULTS */}
         {loading ? (
           <p className="text-center">Loading...</p>
         ) : data.length === 0 ? (
@@ -127,7 +126,7 @@ const FilterMedicines = () => {
           )
         ) : (
           <>
-            {/* Cards */}
+            {/* CARDS */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
 
               {currentData.map((m) => {
@@ -135,41 +134,58 @@ const FilterMedicines = () => {
                   m.expiryDate && new Date(m.expiryDate) < new Date();
 
                 return (
-                  <div key={m._id} className="bg-white border rounded-xl p-5 shadow-sm">
+                  <div key={m._id} className="bg-white border rounded-xl shadow-sm overflow-hidden">
 
-                    <h3 className="font-semibold mb-2">{m.name}</h3>
+                    {/* ✅ IMAGE */}
+                    {m.image ? (
+                      <img
+                        src={m.image}
+                        alt={m.name}
+                        className="w-full h-40 object-cover"
+                      />
+                    ) : (
+                      <div className="w-full h-40 bg-gray-200 flex items-center justify-center text-gray-500">
+                        No Image
+                      </div>
+                    )}
 
-                    <p>Qty: {m.quantity || "—"}</p>
+                    {/* CONTENT */}
+                    <div className="p-4">
 
-                    <p className={isExpired ? "text-red-500" : ""}>
-                      Exp: {m.expiryDate || "—"}
-                    </p>
+                      <h3 className="font-semibold mb-2">{m.name}</h3>
 
-                    <p>City: {m.location?.city || "—"}</p>
+                      <p>Qty: {m.quantity || "—"}</p>
 
-                    <button
-                      onClick={() => {
-                        if (!m.donor) {
-                          toast.error("Donor info not available");
-                          return;
-                        }
+                      <p className={isExpired ? "text-red-500" : ""}>
+                        Exp: {m.expiryDate || "—"}
+                      </p>
 
-                        setSelectedDonor({
-                          ...m.donor,
-                          email: m.userId?.email
-                        });
-                      }}
-                      className="mt-3 w-full bg-green-500 text-white py-2 rounded"
-                    >
-                      Contact Donor
-                    </button>
+                      <p>City: {m.location?.city || "—"}</p>
 
+                      <button
+                        onClick={() => {
+                          if (!m.donor) {
+                            toast.error("Donor info not available");
+                            return;
+                          }
+
+                          setSelectedDonor({
+                            ...m.donor,
+                            email: m.userId?.email
+                          });
+                        }}
+                        className="mt-3 w-full bg-green-500 text-white py-2 rounded hover:bg-green-600"
+                      >
+                        Contact Donor
+                      </button>
+
+                    </div>
                   </div>
                 );
               })}
             </div>
 
-            {/* 🔥 PAGINATION UI */}
+            {/* PAGINATION */}
             <div className="flex justify-center mt-8 gap-2 flex-wrap">
 
               <button
@@ -208,17 +224,23 @@ const FilterMedicines = () => {
 
       </div>
 
-      {/* Modal */}
+      {/* MODAL */}
       {selectedDonor && (
-        <div className="fixed inset-0 bg-black/40 flex justify-center items-center">
-          <div className="bg-white p-6 rounded-xl">
+        <div className="fixed inset-0 bg-black/40 flex justify-center items-center z-50">
+          <div className="bg-white p-6 rounded-xl w-80 shadow-lg">
 
-            <h3>Donor Details</h3>
-            <p>Email: {selectedDonor.email}</p>
-            <p>Name: {selectedDonor.name}</p>
-            <p>Phone: {selectedDonor.mobile_no}</p>
+            <h3 className="text-lg font-semibold mb-3">
+              Donor Details
+            </h3>
 
-            <button onClick={() => setSelectedDonor(null)}>
+            <p><b>Email:</b> {selectedDonor.email}</p>
+            <p><b>Name:</b> {selectedDonor.name}</p>
+            <p><b>Phone:</b> {selectedDonor.mobile_no}</p>
+
+            <button
+              onClick={() => setSelectedDonor(null)}
+              className="mt-4 w-full bg-gray-300 py-2 rounded"
+            >
               Close
             </button>
 
